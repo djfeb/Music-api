@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music API Documentation</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .endpoint { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .method { background: #007bff; color: white; padding: 3px 8px; border-radius: 3px; font-size: 12px; }
+        .url { font-family: monospace; background: #e9ecef; padding: 2px 5px; }
+        .example { background: #f8f9fa; padding: 10px; border-left: 4px solid #007bff; margin: 10px 0; }
+        .response { background: #d4edda; padding: 10px; border-radius: 3px; }
+        pre { background: #f8f9fa; padding: 10px; overflow-x: auto; }
+        .test-button { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 3px; cursor: pointer; }
+        .test-result { margin-top: 10px; padding: 10px; border-radius: 3px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>🎵 Music API Documentation</h1>
+    <p>Simple REST API for accessing your music database - no authentication required!</p>
+    
+    <div class="example">
+        <strong>Base URL:</strong> <span class="url">http://localhost:3000</span>
+    </div>
+
+    <h2>📊 Quick Stats</h2>
+    <div class="endpoint">
+        <span class="method">GET</span> <span class="url">/stats</span>
+        <button class="test-button" onclick="testEndpoint('/stats')">Test</button>
+        <p>Get database statistics including total counts and top content.</p>
+        <div id="stats-result"></div>
+    </div>
+
+    <h2>🎤 Artists</h2>
+    
+    <div class="endpoint">
+        <span class="method">GET</span> <span class="url">/artists</span>
+        <button class="test-button" onclick="testEndpoint('/artists?limit=5')">Test</button>
+        <p>Get all artists with pagination and sorting.</p>
+        <strong>Parameters:</strong>
+        <ul>
+            <li><code>page</code> - Page number (default: 1)</li>
+            <li><code>limit</code> - Items per page (default: 50, max: 100)</li>
+            <li><code>sort</code> - Sort by: name, popularity, followers_total, created_at</li>
+            <li><code>order</code> - asc or desc</li>
+        </ul>
+        <div id="artists-result"></div>
+    </div>
+
+    <div class="endpoint">
+        <span class="method">GET</span> <span class="url">/artists/search/:query</span>
+        <button class="test-button" onclick="testEndpoint('/artists/search/taylor')">Test with "taylor"</button>
+        <p>Search artists by name.</p>
+        <div id="artists-search-result"></div>
+    </div>
+
+    <h2>💿 Albums</h2>
+    
+    <div class="endpoint">
+        <span class="method">GET</span> <span class="url">/albums</span>
+        <button class="test-button" onclick="testEndpoint('/albums?limit=5&sort=popularity&order=desc')">Test</button>
+        <p>Get all albums with pagination and sorting.</p>
+        <div id="albums-result"></div>
+    </div>
+
+    <div class="endpoint">
+        <span class="method">GET</span> <span class="url">/albums/search/:query</span>
+        <button class="test-button" onclick="testEndpoint('/albums/search/love')">Test with "love"</button>
+        <p>Search albums by name.</p>
+        <div id="albums-search-result"></div>
+    </div>
+
+    <h2>🎵 Tracks</h2>
+    
+    <div class="endpoint">
+        <span class="method">GET</span> <span class="url">/tracks</span>
+        <button class="test-button" onclick="testEndpoint('/tracks?limit=5&sort=popularity&order=desc')">Test</button>
+        <p>Get all tracks with pagination and sorting.</p>
+        <div id="tracks-result"></div>
+    </div>
+
+    <div class="endpoint">
+        <span class="method">GET</span> <span class="url">/tracks/search/:query</span>
+        <button class="test-button" onclick="testEndpoint('/tracks/search/love')">Test with "love"</button>
+        <p>Search tracks by name.</p>
+        <div id="tracks-search-result"></div>
+    </div>
+
+    <h2>🔗 Relationship Endpoints</h2>
+    
+    <div class="endpoint">
+        <span class="method">GET</span> <span class="url">/artists/:id/albums</span>
+        <p>Get all albums by a specific artist.</p>
+    </div>
+
+    <div class="endpoint">
+        <span class="method">GET</span> <span class="url">/artists/:id/tracks</span>
+        <p>Get all tracks by a specific artist.</p>
+    </div>
+
+    <div class="endpoint">
+        <span class="method">GET</span> <span class="url">/albums/:id/tracks</span>
+        <p>Get all tracks in a specific album.</p>
+    </div>
+
+    <script>
+        async function testEndpoint(endpoint) {
+            const resultId = endpoint.split('/')[1].split('?')[0] + '-result';
+            const resultDiv = document.getElementById(resultId);
+            
+            try {
+                resultDiv.innerHTML = '<p>Loading...</p>';
+                const response = await fetch(endpoint);
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="test-result success">
+                        <strong>Response (${response.status}):</strong>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-result error">
+                        <strong>Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Auto-load stats on page load
+        window.onload = () => testEndpoint('/stats');
+    </script>
+</body>
+</html>

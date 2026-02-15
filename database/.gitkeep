@@ -1,0 +1,2 @@
+# This file ensures the database directory is tracked by git
+# The actual .sqlite files are ignored via .gitignore
