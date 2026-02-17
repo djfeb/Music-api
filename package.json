@@ -4,15 +4,7 @@
   "description": "Simple Music API for accessing music database",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "migrate": "node run-migration-safe.js",
-    "fix-indexes": "node fix-indexes.js",
-    "download-images": "node download-images.js",
-    "sync-images": "node sync-new-images.js",
-    "check-images": "node check-images-status.js",
-    "cleanup-images": "node cleanup-orphaned-images.js",
-    "setup-images": "node run-migration-safe.js && node download-images.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "@codyduong/ytmusicapi": "^0.4.6",
